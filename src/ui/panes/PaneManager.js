@@ -1,4 +1,4 @@
-import {Pane, PaneButton, PaneLogin, PaneRegister, PaneTab, PaneChat, PaneRooms} from "../";
+import {Pane, PaneButton, PaneLogin, PaneRegister, PaneTab, PaneChat, PaneRooms, PaneRoomCreator} from "../";
 import interact from "interactjs";
 import $ from 'webpack-zepto'
 
@@ -18,6 +18,10 @@ export class PaneManager {
       console.log("closePane");
     })
     $(document).on('togglePane', (event, args) => {
+      this.get('panes', args.id).toggleActive();
+      this.get('buttons', args.btnId).toggleActive();
+    })
+    $(document).on('openPane', (event, args) => {
       this.get('panes', args.id).toggleActive();
       this.get('buttons', args.btnId).toggleActive();
     })
@@ -104,6 +108,12 @@ export class PaneManager {
     this.panes.push(pane)
     this.buttons.push(button)
     this.reOrder()
+    pane = new PaneRoomCreator();
+    this.panes.push(pane)
+    $(document).on('openRoomCreator', event => {
+      console.log(5);
+      this.get('panes', 'roomcreator-pane').toggleActive();
+    })
   }
   remove (type, id) {
     this[type].forEach((item, i) => {

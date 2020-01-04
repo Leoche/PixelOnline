@@ -12,13 +12,13 @@ export class Account {
         this.socket.emit('loginToken', JSON.stringify({
           email: localStorage.getItem('po_email'),
           fingerprint: this.getFingerprint(),
-          tokenDate: parseInt(localStorage.getItem('po_tokenDate')),
+          tokenTimestamp: parseInt(localStorage.getItem('po_tokenTimestamp')),
         }));
     } else {
         this.socket.emit('loginToken', JSON.stringify({
           email: localStorage.getItem('po_email'),
           fingerprint: 0,
-          tokenDate: 0,
+          tokenTimestamp: 0,
         }));
     }
     $(document).on('login', (event, args) => {
@@ -43,7 +43,8 @@ export class Account {
         this.username = res.username;
         this.email = res.email;
         localStorage.setItem('po_email', res.email);
-        localStorage.setItem('po_tokenDate', res.tokenDate);
+        localStorage.setItem('po_token', res.token);
+        localStorage.setItem('po_tokenTimestamp', res.tokenTimestamp);
         window.game.ui.setConnected()
         new Notification("Bonjour " + res.username + "!","success", 3000);
       } else if (res.error == "tokeninvalid" ) {
@@ -54,7 +55,7 @@ export class Account {
   hasToken () {
     return localStorage.getItem('po_email') != null &&
         localStorage.getItem('po_token') != null &&
-        localStorage.getItem('po_tokenDate') != null
+        localStorage.getItem('po_tokenTimestamp') != null
   }
   getFingerprint() {
     return new ClientJS().getFingerprint()

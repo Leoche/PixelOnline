@@ -59,7 +59,8 @@ export class PaneRooms extends PaneTab {
       this.close()
     })
     $(document).on('click', '.createroom', event => {
-      console.log(5)
+      event.stopPropagation();
+      $(document.body).trigger('createRoomCreator')
     })
   }
   toggleActive () {

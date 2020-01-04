@@ -38,7 +38,7 @@ class AuthManager{
         payload = JSON.parse(payload)
         if (payload.tokenTimestamp + 60 * 30 < (new Date() / 1000 | 0)) {
           socket.emit('loginResponse', JSON.stringify({error:"tokeninvalid"}));
-          Logger("AuthManager.loginToken", "Invalid Token");
+          Logger("AuthManager.loginToken", "Outdated Token");
           return;
         }
         this.DB.db.collection('users').findOne(
@@ -51,16 +51,21 @@ class AuthManager{
             socket.user = new User(result)
             socket.emit('loginResponse', JSON.stringify(socket.user))
             this.usermanager.connect(socket)
-            Logger("AuthManager.login", "connected" + socket.user)
+            Logger("AuthManager.loginToken", "connected by token " + JSON.stringify(socket.user))
         })
         .catch(err => {
+            console.log({
+                email:payload.email, 
+                token: this.createToken(payload).token, 
+                tokenTimestamp:payload.tokenTimestamp
+            });
             socket.emit('loginResponse', JSON.stringify({error:"tokeninvalid"}));
             Logger("AuthManager.loginToken", "Invalid Token");
         });
       }
 
-      createToken(payload, date) {
-        let timestamp = date || (new Date() / 1000 | 0);
+      createToken(payload) {
+        let timestamp = payload.tokenTimestamp || (new Date() / 1000 | 0);
         return {
           token: md5(payload.email + payload.fingerprint + timestamp),
           tokenTimestamp: timestamp
