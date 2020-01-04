@@ -1,9 +1,12 @@
 import $ from 'webpack-zepto'
 
-export class PaneButton {
-  constructor(id, icon, active) {
+export class PaneExitButton {
+  constructor() {
     this.active = false;
     this.opts = {}
+    let id = "exit"
+    let paneId = "exit"
+    let icon = "exit"
     this.opts.id = id + "-button" || "undefined-button";
     this.opts.paneId = id + "-pane" || "undefined-pane";
     this.opts.icon = icon || "none";
@@ -12,12 +15,8 @@ export class PaneButton {
     this.elem = document.querySelector('#' + this.opts.id)
     $(document).on('click','#' + this.opts.id, event => {
       event.stopPropagation();
-      $(document.body).trigger('togglePane', {id:this.opts.paneId, btnId:this.opts.id})
+      $(document.body).trigger('disconnect')
     })
-  }
-  toggleActive () {
-    this.opts.active = !this.opts.active;
-    $("#" + this.opts.id).toggleClass('active')
   }
   destroy () {
     $('#' + this.opts.id).remove()

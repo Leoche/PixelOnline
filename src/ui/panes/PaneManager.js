@@ -1,4 +1,4 @@
-import {Pane, PaneButton, PaneLogin, PaneRegister, PaneTab, PaneChat, PaneRooms, PaneRoomCreator} from "../";
+import {Pane, PaneButton, PaneLogin, PaneRegister, PaneTab, PaneChat, PaneRooms, PaneRoomCreator, PaneExitButton} from "../";
 import interact from "interactjs";
 import $ from 'webpack-zepto'
 
@@ -61,7 +61,6 @@ export class PaneManager {
     });
   }
   createLogin() {
-    console.log("de");
     let pane = new PaneLogin();
     this.panes.push(pane)
     $(document).on('openRegister', event => {
@@ -99,7 +98,9 @@ export class PaneManager {
   }
   setConnected() {
     this.remove('panes', 'login-pane')
-    let button = new PaneButton('chat', 'chat')
+    let button = new PaneExitButton()
+    this.buttons.push(button)
+    button = new PaneButton('chat', 'chat')
     let pane = new PaneChat()
     this.panes.push(pane)
     this.buttons.push(button)
@@ -113,10 +114,17 @@ export class PaneManager {
       this.panes.push(pane)
       this.reOrder();
     })
+    $(document).on('disconnect', event => {
+      this.remove('panes', -1)
+      this.remove('buttons', -1)
+      window.game.socket.emit('manualdisconnect');
+      window.game.account.removeToken()
+      window.location.reload()
+    })
   }
   remove (type, id) {
     this[type].forEach((item, i) => {
-      if(item.id === id || item.opts.id === id) {
+      if(item.id === id || item.opts.id === id || -1 === id) {
         item.destroy()
         this.panes.splice(i, 1)
       }
@@ -125,7 +133,7 @@ export class PaneManager {
   get (type, id) {
     let res = null;
     this[type].forEach(item => {
-      if(item.opts.id === id) res = item
+      if(item.opts.id === id || -1 === id) res = item
     })
     return res;
   }

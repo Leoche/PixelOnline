@@ -57,6 +57,11 @@ export class Account {
         localStorage.getItem('po_token') != null &&
         localStorage.getItem('po_tokenTimestamp') != null
   }
+  removeToken () {
+    return localStorage.removeItem('po_email') &&
+        localStorage.removeItem('po_token') &&
+        localStorage.removeItem('po_tokenTimestamp')
+  }
   getFingerprint() {
     return new ClientJS().getFingerprint()
   }

@@ -45,3 +45,6 @@
 .button-tab--rooms:after{
   background-position: -96px 0;
 }
+.button-tab--exit:after{
+  background-position: -144px 0;
+}

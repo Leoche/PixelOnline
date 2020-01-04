@@ -70,6 +70,15 @@ var DB = new Database(MongoClient, usermanager, () => {
       console.log("[ROOMS] GET ALL");
       roommanager.move(socket, usermanager.getUserById(socket.id).user, detail)
     })
+    
+    socket.on('manualdisconnect', function () {
+      Logger("Socket.logout",socket.id)
+      let user = usermanager.getUserById(socket.id)
+      if (user && user.user.roomId) {
+        console.log("[ROOMS] LEAVE " + user.user.roomId);
+        roommanager.leave(socket, user.user)
+      }
+    })
     socket.on('disconnect', function () {
       Logger("Socket.logout",socket.id)
       let user = usermanager.getUserById(socket.id)
