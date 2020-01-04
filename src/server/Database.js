@@ -3,7 +3,7 @@ var Validator = require('./Validator')
 var md5 = require('md5')
 var ObjectId = require('mongodb').ObjectID;
 class Database {
-  constructor(MongoClient, USERS) {
+  constructor(MongoClient, USERS, cb) {
     this.usermanager = USERS
     this.USE_DB = true;
     this.users = [
@@ -13,16 +13,13 @@ class Database {
         password:"1234"
       }
     ]
-    this.db = null;
-    return new Promise((resolve, reject) =>{
-      MongoClient.connect("mongodb://localhost/", { useNewUrlParser: true }, (error, db) => {
-        if (error) reject(error)
+    this.db = MongoClient.connect("mongodb://localhost/", { useNewUrlParser: true }, (error, db) => {
+        if (error) return false
         this.db = db.db("pixelonline")
         Logger("Database.connexion","Connecté à la base de données 'pixelonline'");
         this.db.createCollection('users')
-        resolve()
+        cb();
       });
-    });
   }
 
   getUser (collection, field, value) {

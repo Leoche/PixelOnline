@@ -26,12 +26,12 @@ function handler (req, res) {
 }
 var CHAT = [];
 var usermanager = new UserManager();
-var DB = null;
-(async () => {
-DB = await new Database(MongoClient, usermanager)
-})();
-var authmanager = new AuthManager(DB, usermanager);
-var roommanager = new RoomManager(io, DB, usermanager);
+var authmanager = new AuthManager(usermanager);
+var roommanager = new RoomManager(io, usermanager);
+var DB = new Database(MongoClient, usermanager, () => {
+  authmanager.attachDB(DB)
+  roommanager.attachDB(DB)
+})
 io.on('connection', function (socket) {
   Logger("Socket.connection",socket.id)
   socket.on('login', function (payload) {authmanager.login(socket,payload)});
@@ -71,9 +71,6 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function () {
     Logger("Socket.logout",socket.id)
     let user = usermanager.getUserById(socket.id)
-    console.log(usermanager);
-    console.log("---------------");
-    console.log(user);
     if (user && user.user.roomId) {
       console.log("[ROOMS] LEAVE " + user.user.roomId);
       roommanager.leave(socket, user.user)

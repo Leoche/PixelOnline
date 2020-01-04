@@ -2,9 +2,12 @@ var Logger = require('./Logger')
 var User = require('./models/User').User
 var md5 = require('md5')
 class AuthManager{
-    constructor(DB, usermanager) {
-      this.DB = DB
+    constructor(usermanager) {
+      this.DB = null
       this.usermanager = usermanager
+    }
+    attachDB(DB){
+      this.DB = DB
     }
     login (socket, payload) {
         Logger("AuthManager.login", payload);

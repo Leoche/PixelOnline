@@ -1,15 +1,19 @@
+var Logger = require('./Logger')
 var ObjectId = require('mongodb').ObjectID;
 var JSON = require('circular-json');
 class RoomManager {
-  constructor(io, DB, usermanager) {
+  constructor(io, usermanager) {
     this.rooms = []
-    this.DB = DB
+    this.DB = null
     this.io = io
     this.usermanager = usermanager
   }
+  attachDB(DB){
+    this.DB = DB
+  }
   enter (socket, user, id) {
     let roomFound = this.getRoomById(id)
-    console.log("user.roomId", user.roomId);
+    Logger("RoomManager.enter", user.username + " in " + id);
     if (user.roomId) this.leave(socket, user)
     if (roomFound !== null) {
       user.roomId = id
