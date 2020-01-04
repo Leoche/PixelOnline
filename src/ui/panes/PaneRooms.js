@@ -31,6 +31,7 @@ export class PaneRooms extends PaneTab {
           <span>2/10</span>
         </li>
       </ul>
+      <button class="createroom">CREATE</button>
       </div>
     `;
     this.first = false;
@@ -56,6 +57,9 @@ export class PaneRooms extends PaneTab {
       let roomId = event.currentTarget.dataset.roomid
       window.game.socket.emit('enterRooms', JSON.stringify({roomId:roomId}));
       this.close()
+    })
+    $(document).on('click', '.createroom', event => {
+      console.log(5)
     })
   }
   toggleActive () {

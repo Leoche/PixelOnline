@@ -1,8 +1,10 @@
+var Logger = require('./Logger')
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 var Database = require('./Database').Database
 var UserManager = require('./UserManager').UserManager
+var AuthManager = require('./AuthManager').AuthManager
 var RoomManager = require('./RoomManager').RoomManager
 var MongoClient = require("mongodb").MongoClient;
 String.prototype.capitalize = function() {
@@ -24,22 +26,18 @@ function handler (req, res) {
 }
 var CHAT = [];
 var usermanager = new UserManager();
-var DB = new Database(MongoClient, usermanager);
+var DB = null;
+(async () => {
+DB = await new Database(MongoClient, usermanager)
+})();
+var authmanager = new AuthManager(DB, usermanager);
 var roommanager = new RoomManager(io, DB, usermanager);
 io.on('connection', function (socket) {
-  console.log("[CONNEXION] " + socket.id);
-  socket.on('login', function (detail) {
-    console.log("[LOGIN] Trying with " + detail);
-    detail = JSON.parse(detail)
-    DB.login(socket, detail.email, detail.password, detail.fingerprint);
-  })
-  socket.on('loginToken', function (detail) {
-    console.log("[LOGIN] Trying with " + detail);
-    detail = JSON.parse(detail)
-    DB.loginToken(socket, detail.email, detail.fingerprint, detail.tokenDate);
-  })
+  Logger("Socket.connection",socket.id)
+  socket.on('login', function (payload) {authmanager.login(socket,payload)});
+  socket.on('loginToken', function (payload) {authmanager.loginToken(socket,payload)});
   socket.on('register', function (detail) {
-    console.log("[REGISTER] Trying with " + detail);
+    Logger("Socket.register",detail)
     detail = JSON.parse(detail)
     console.log(detail);
     DB.register(socket, detail.username, detail.email, detail.password);
@@ -71,7 +69,7 @@ io.on('connection', function (socket) {
     roommanager.move(socket, usermanager.getUserById(socket.id).user, detail)
   })
   socket.on('disconnect', function () {
-    console.log("[LOGOUT] " + socket.id);
+    Logger("Socket.logout",socket.id)
     let user = usermanager.getUserById(socket.id)
     console.log(usermanager);
     console.log("---------------");
