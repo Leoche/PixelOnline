@@ -108,11 +108,10 @@ export class PaneManager {
     this.panes.push(pane)
     this.buttons.push(button)
     this.reOrder()
-    pane = new PaneRoomCreator();
-    this.panes.push(pane)
-    $(document).on('openRoomCreator', event => {
-      console.log(5);
-      this.get('panes', 'roomcreator-pane').toggleActive();
+    $(document).on('createRoomCreator', event => {
+      let pane = new PaneRoomCreator();
+      this.panes.push(pane)
+      this.reOrder();
     })
   }
   remove (type, id) {

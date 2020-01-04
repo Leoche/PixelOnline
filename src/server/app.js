@@ -57,6 +57,9 @@ var DB = new Database(MongoClient, usermanager, () => {
       console.log("[ROOMS] GET ALL");
       DB.getRooms(socket, roommanager)
     })
+    socket.on('createRoom', function (payload) {
+      console.log(payload);
+    })
     socket.on('enterRooms', function (detail) {
       detail = JSON.parse(detail)
       console.log("[ROOMS] ENTER " + detail.roomId);

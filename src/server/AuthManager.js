@@ -92,7 +92,7 @@ class AuthManager{
           if (!this.USE_DB) {
             this.users.push(user)
           } else {
-            this.db.collection('users').insertOne(user).then(() => {
+            this.DB.db.collection('users').insertOne(user).then(() => {
               socket.emit('registerResponse', JSON.stringify({"success":"OK"}));
             })
           }
@@ -103,23 +103,15 @@ class AuthManager{
       }
       isUnique (collection, field, value) {
         return new Promise((resolve, reject) => {
-          if (!this.USE_DB) {
-            let isUnique = true;
-            this[collection].forEach(item => {
-              if (item[field] === value) reject(field.capitalize() + ' already taken.')
-            })
-            resolve()
-          } else {
-            this.db.collection(collection).findOne({[field] :value}).then(result => {
-              if(result) {
-                reject(field.capitalize() + ' already taken2.')
-              } else {
-                resolve()
-              }
-              return result;
-            })
-            .catch(err => console.error(`Failed to find document: ${err}`));
-          }
+          this.DB.db.collection(collection).findOne({[field] :value}).then(result => {
+            if(result) {
+              reject(field.capitalize() + ' already taken.')
+            } else {
+              resolve()
+            }
+            return result;
+          })
+          .catch(err => console.error(`Failed to find document: ${err}`));
         });
       }
 }

@@ -60,6 +60,7 @@ export class PaneRooms extends PaneTab {
     })
     $(document).on('click', '.createroom', event => {
       event.stopPropagation();
+      console.log(10);
       $(document.body).trigger('createRoomCreator')
     })
   }

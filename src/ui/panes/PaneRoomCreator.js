@@ -5,35 +5,26 @@ export class PaneRoomCreator extends Pane {
   constructor () {
     super({
       id: "roomcreator-pane",
-      width: 300,
+      width: 400,
       height: 340,
       title: "Rooms creator",
       controls: true,
-      active:false
+      active:true
     });
     document.querySelector('#' + this.opts.id + ' .window--content').innerHTML = `
       <div class="window--marsins">
-      <ul class="rooms">
-        <li>
-          <span>Title</span>
-          <span>2/10</span>
-        </li>
-        <li>
-          <span>Title</span>
-          <span>2/10</span>
-        </li>
-        <li>
-          <span>Title</span>
-          <span>2/10</span>
-        </li>
-        <li>
-          <span>Title</span>
-          <span>2/10</span>
-        </li>
-      </ul>
-      <button class="createroom">CREATE</button>
+      <label class="fullwidth noselect" for="` + this.opts.id + `--name">Room name:</label>
+      <input name="` + this.opts.id + `--name" type="text" placeholder="Room name" value=""/>
+      <button class="` + this.opts.id + `--create">CREATE</button>
       </div>
     `;
+    $(document).on('click', `.` + this.opts.id + `--create`, event => {
+      console.log(5)
+      let credentials = {
+        name: $('input[name=' + this.opts.id + '--name]').val()
+      }
+      window.game.socket.emit('createRoom', JSON.stringify(credentials));
+    })
   }
   toggleActive () {
     this.opts.active = !this.opts.active;
