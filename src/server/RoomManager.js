@@ -1,4 +1,5 @@
 var Logger = require('./Logger')
+var Room = require('./models/Room')
 var ObjectId = require('mongodb').ObjectID;
 var JSON = require('circular-json');
 class RoomManager {
@@ -107,6 +108,9 @@ class RoomManager {
       result.push(room2)
     })
     return JSON.stringify(result);
+  }
+  create (payload) {
+    let room = new Room(payload)
   }
 }
 module.exports = {RoomManager: RoomManager}
