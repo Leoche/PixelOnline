@@ -8,6 +8,7 @@ export class PaneRooms extends PaneTab {
       width: 300,
       height: 340,
       title: "Rooms",
+      color:"Red",
       controls: true,
       active:false
     });

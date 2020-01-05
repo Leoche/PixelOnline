@@ -8,6 +8,7 @@ export class PaneRoomCreator extends Pane {
       width: 400,
       height: 340,
       title: "Rooms creator",
+      color:"Red",
       controls: true,
       active:true
     });

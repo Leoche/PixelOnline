@@ -12,12 +12,14 @@ export class Pane {
       active:true,
       resizable:false,
       draggable:true,
+      color:"Blue",
       centered:true
     }
     $.extend(this.opts, options)
     let elem = `<div id="` + this.opts.id + `" class="window" style="
         width:` + this.opts.width + `px;
         height:` + this.opts.height + `px;
+        filter: hue-rotate(` + this.setColor(this.opts.color) + `deg);
         ">
         <div class="window--resize noselect"></div>
       <div class="window--content fullheight"></div>
@@ -52,5 +54,30 @@ export class Pane {
   }
   destroy () {
     $('#' + this.opts.id).remove()
+  }
+  setColor (color) {
+    switch(color) {
+      case "Green":
+        return 205;
+      break;
+      case "Red":
+        return 115;
+      break;
+      case "Orange":
+        return 145;
+      break;
+      case "Violet":
+        return 30;
+      break;
+      case "Pink":
+        return 60;
+      break;
+      case "Indigo":
+        return 285;
+      break;
+      default:
+        return 0;
+      break;
+    }
   }
 }

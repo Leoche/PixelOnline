@@ -9,6 +9,7 @@ export class PaneChat extends PaneTab {
       height: 400,
       title: "Chat",
       controls: true,
+      color:"Orange",
       resizable:true,
       active:false
     });
