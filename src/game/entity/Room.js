@@ -15,7 +15,7 @@ export class Room {
     this.height = (this.widthTile + this.heightTile) * this.floor.height / 2;
     this.x = game.renderer.canvas.width / 2 - this.width / 2
     this.y = game.renderer.canvas.height / 2 - this.height / 2
-    this.cursor = new IsoSprite(document.querySelector('#img-cursor2'), 0, 0, this)
+    this.cursor = new IsoSprite(document.querySelector('#img-cursor'), 0, 0, this)
     this.entities = []
     this.paths = []
     this.infos.users.forEach(user => {

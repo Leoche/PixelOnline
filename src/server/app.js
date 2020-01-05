@@ -33,13 +33,27 @@ var DB = new Database(MongoClient, usermanager, () => {
   roommanager.attachDB(DB)
   io.on('connection', function (socket) {
     Logger("Socket.connection",socket.id)
-    socket.on('login', function (payload) {authmanager.login(socket,payload)});
-    socket.on('loginToken', function (payload) {authmanager.loginToken(socket,payload)});
-    socket.on('register', function (detail) {
-      Logger("Socket.register",detail)
-      detail = JSON.parse(detail)
-      console.log(detail);
-      DB.register(socket, detail.username, detail.email, detail.password);
+    
+    //AuthManager
+    socket.on('login', (payload) => {authmanager.login(socket,payload)});
+    socket.on('loginToken', (payload) => {authmanager.loginToken(socket,payload)});
+    socket.on('register', (payload) => {authmanager.register(socket,payload)});
+    
+    //RoomManager
+    socket.on('getRooms', (payload) => { roommanager.getRooms(socket) })
+    socket.on('createRoom', (payload) => { roommanager.create(socket, payload) })
+    socket.on('enterRooms', (payload) => { roommanager.enter(socket, payload) })
+    socket.on('move', (payload) => { roommanager.move(socket, payload) })
+    
+
+    //DISCONNECT
+    socket.on('manualdisconnect', function () {
+      Logger("Socket.logout",socket.id)
+      let user = usermanager.getUserById(socket.id)
+      if (user && user.user.roomId) {
+        console.log("[ROOMS] LEAVE " + user.user.roomId);
+        roommanager.leave(socket, user.user)
+      }
     })
     socket.on('message', function (msg) {
       if (socket.user) {
@@ -51,32 +65,6 @@ var DB = new Database(MongoClient, usermanager, () => {
         CHAT.push(newmessage)
         if (CHAT.length > 50) CHAT.splice(0,1)
         io.emit("chat", JSON.stringify(newmessage))
-      }
-    })
-    socket.on('getRooms', function () {
-      console.log("[ROOMS] GET ALL");
-      DB.getRooms(socket, roommanager)
-    })
-    socket.on('createRoom', function (payload) {
-      console.log(payload);
-    })
-    socket.on('enterRooms', function (detail) {
-      detail = JSON.parse(detail)
-      console.log("[ROOMS] ENTER " + detail.roomId);
-      roommanager.enter(socket, usermanager.getUserById(socket.id).user, detail.roomId)
-    })
-    socket.on('move', function (detail) {
-      detail = JSON.parse(detail)
-      console.log("[ROOMS] GET ALL");
-      roommanager.move(socket, usermanager.getUserById(socket.id).user, detail)
-    })
-    
-    socket.on('manualdisconnect', function () {
-      Logger("Socket.logout",socket.id)
-      let user = usermanager.getUserById(socket.id)
-      if (user && user.user.roomId) {
-        console.log("[ROOMS] LEAVE " + user.user.roomId);
-        roommanager.leave(socket, user.user)
       }
     })
     socket.on('disconnect', function () {

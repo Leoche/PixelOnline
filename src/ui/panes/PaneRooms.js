@@ -41,12 +41,8 @@ export class PaneRooms extends PaneTab {
       rooms.forEach(room => {
         $('#' + this.opts.id + ' .window--content .rooms').append(`<li class="room" data-roomid="` + room._id + `">
           <span>` + room.name + `</span>
-          <span>` + room.users + `</span>
+          <span>` + room.users.length + `</span>
         </li>`)
-        if (!this.first) {
-          this.first = true
-          window.game.socket.emit('enterRooms', JSON.stringify({roomId:room._id.toString()}));
-        }
       })
     });
     window.game.socket.on('enteredRoom', data => {

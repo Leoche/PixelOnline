@@ -4,6 +4,7 @@ class User {
     this.username = data.username;
     this.email = data.email;
     this.token = data.token;
+    this.roomId - null;
     this.tokenTimestamp = data.tokenTimestamp;
   }
 }
