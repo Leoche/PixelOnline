@@ -20,12 +20,10 @@ export class Room {
     this.paths = []
     this.infos.users.forEach(user => {
       user.sprite = new IsoSprite(document.querySelector('#img-ball'), user.x, user.y, this)
-      console.log(user.sprite);
     })
     //this.createPath()
     game.socket.on('usersUpdate', data => {
       data = JSON.parse(data)
-      console.log(data);
       data.users.forEach(newUser => {
         let found = false
         this.infos.users.forEach((user, i) => {
@@ -42,7 +40,6 @@ export class Room {
     })
     game.socket.on('userLeave', data => {
       data = JSON.parse(data)
-      console.log(data);
       this.infos.users.forEach((user, i) => {
         if(user._id === data.id) {
           this.infos.users.splice(i, 1)
@@ -113,8 +110,6 @@ export class Room {
         this.floor.render(ctx)
       }
     }
-    ctx.fillStyle = "rgba(255,0,0,.05)"
-    ctx.fillRect(this.x, this.y, this.width, this.height)
     this.cursor.render(ctx, this)
     this.infos.users.forEach(user => user.sprite.render(ctx, this))
   }
