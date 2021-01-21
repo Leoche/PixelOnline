@@ -40,7 +40,7 @@
     "phaser": "3.9.0",
     "phaser-animated-tiles": "^2.0.2",
     "phaser3-plugin-isometric": "^0.0.6",
-    "socket.io": "^2.1.1",
+    "socket.io": "^2.4.0",
     "style-loader": "^0.23.0",
     "url-loader": "^1.1.1",
     "webpack-zepto": "0.0.1"
