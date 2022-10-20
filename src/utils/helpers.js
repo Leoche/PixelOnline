@@ -56,5 +56,5 @@ export function decompressRoom(map) {
   return mapfinal;
 }
 export function calcul(map) {
-  return map.replace(new RegExp("x", 'g'), "*").replace(new RegExp("\\.", 'g'), "+").replace(new RegExp("3", 'g'), "1").replace(new RegExp("2", 'g'), "1")
+  return map.replace(new RegExp("x", 'g'), "*").replace(new RegExp("\\.", 'g'), "+").replace(new RegExp("3", 'g'), "1").replace(new RegExp("x", 'g'), "*").replace(new RegExp("2", 'g'), "1")
 }
